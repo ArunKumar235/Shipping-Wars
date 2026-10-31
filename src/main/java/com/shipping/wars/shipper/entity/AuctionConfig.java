@@ -1,5 +1,6 @@
 package com.shipping.wars.shipper.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class AuctionConfig {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "rfq_id")
+    @JsonIgnore
     private RFQ rfq;
 
     @Min(value = 0)

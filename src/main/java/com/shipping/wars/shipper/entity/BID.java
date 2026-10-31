@@ -3,7 +3,8 @@ package com.shipping.wars.shipper.entity;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
-import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -22,11 +23,18 @@ public class BID {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rfq_id", nullable = false)
+    @JsonIgnore
     private RFQ rfq;
+
+    @Column(name = "supplier_id", insertable = false, updatable = false)
+    private Long supplierId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id", nullable = false)
     private Supplier supplier;
+
+    @NotNull
+    private String carrierName;
 
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal freightCharge;
@@ -40,15 +48,14 @@ public class BID {
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal totalPrice;
 
-    @Min(1)
+    @Min(value = 0, message = "Transit days must be a positive number")
     @Column(nullable = false)
-    private Integer transitTimeDays;
+    private Integer transitDays;
 
     @NotNull
     @Column(nullable = false)
     private LocalDate quoteValidity;
 
-    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private Instant submittedAt;
 
@@ -58,7 +65,6 @@ public class BID {
         BigDecimal freight = (freightCharge != null) ? freightCharge : BigDecimal.ZERO;
         BigDecimal origin = (originCharge != null) ? originCharge : BigDecimal.ZERO;
         BigDecimal destination = (destinationCharge != null) ? destinationCharge : BigDecimal.ZERO;
-        
         this.totalPrice = freight.add(origin).add(destination);
     }
 }

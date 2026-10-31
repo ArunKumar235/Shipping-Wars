@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +29,7 @@ public class Supplier {
         cascade = CascadeType.ALL, 
         orphanRemoval = true
     )
+    @JsonIgnore 
     private List<BID> bids = new ArrayList<>();
 
     @CreationTimestamp 
